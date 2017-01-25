@@ -1,0 +1,18 @@
+#Version: 1.0
+
+#Pull base image
+FROM ubuntu:latest
+
+MAINTAINER Shuanglong Li "lis8920@gmail.com"
+
+#Change time Zone
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+#Install Shadowsocks Server
+RUN apt-get update \
+&& apt-get install python-pip python-m2crypto -y \
+&& pip install --upgrade pip \
+&& pip install shadowsocks
+
+#Configure container to run as an executable
+ENTRYPOINT ["/usr/local/bin/ssserver"]
