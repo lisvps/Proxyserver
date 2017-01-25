@@ -51,5 +51,5 @@ apt-get install docker.io -y
 apt-get install qrencode -y
 sudo gpasswd -a $USER docker
 service docker start
-docker run --name $DOCKERNAME --restart always -d -p $PORT:8388 lishuanglong/alpine-shadowsocks -k $PASSWORD
+docker run --name $DOCKERNAME --restart always -d -p $PORT:443 lishuanglong/alpine-web -p 443 -k $PASSWORD
 su $USER 
