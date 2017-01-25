@@ -1,0 +1,59 @@
+#!/bin/bash
+
+#配置项
+
+AddUser_shadowsocks() {
+  while :; do echo
+    read -p "Please input password for shadowsocks: " Shadowsocks_password
+    [ -n "$(echo ${Shadowsocks_password} | grep '[+|&]')" ] && { echo "${CWARNING}input error,not contain a plus sign (+) and & ${CEND}"; continue; }
+    (( ${#Shadowsocks_password} >= 5 )) && break || echo "${CWARNING}Shadowsocks password least 5 characters! ${CEND}"
+  done
+}
+
+Set_ServerIP() {
+    read -p "Please input the server IP address: " ServerIPadd
+}
+
+Config_shadowsocks(){
+mkdir /etc/shadowsocks
+cat > /etc/shadowsocks/config.json << EOF
+{
+    "server":"${ServerIPadd}",
+    "local_address":"127.0.0.1",
+    "local_port":1080,
+    "port_password":{
+    "443":"${Shadowsocks_password}"
+    },
+    "timeout":300,
+    "method":"aes-256-cfb",
+    "fast_open":false
+}
+EOF
+}
+
+Iptables_set() {
+iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+iptables-save > /etc/iptables.up.rules
+}
+
+Set_QRCode() {
+url="aes-256-cfd:$Shadowsocks_password@$ServerIPadd:443"
+uri=$(echo $url | base64)
+qrencode -o SSQRCode.png -s 10 ""ss://"$uri"
+echo "Generated new QR Code picture, name QRCode.png. Done"
+}
+
+#开始安装Shadowsocks
+apt-get install python-pip python-m2crypto -y
+pip install shadowsocks
+apt-get install qrencode -y
+AddUser_shadowsocks
+Set_ServerIP
+Config_shadowsocks
+Iptables_set
+Set_QRCode
+echo "/usr/bin/python /usr/local/bin/ssserver -c /etc/shadowsocks/config.json -d start" >> /etc/rc.local
+ssserver -c /etc/shadowsocks/config.json -d start
+
+
+
