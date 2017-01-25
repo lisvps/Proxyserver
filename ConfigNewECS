@@ -6,6 +6,7 @@ $PASSWORD=""
 $PORT=""
 $DOCKERNAME=""
 $USER=""
+$RSAKEY=""
 
 #创建Ubuntu账户
 
