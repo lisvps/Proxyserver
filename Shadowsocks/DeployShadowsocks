@@ -2,8 +2,8 @@
 
 #设置变量
 
-$USER=""
-$RSAKEY=""
+USER=""
+RSAKEY=""
 
 #创建Ubuntu账户
 
