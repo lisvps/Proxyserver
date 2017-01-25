@@ -1,9 +1,15 @@
 #!/bin/bash
 
-#设置变量
+#设置用户名和主机变量，设置SSH端口
 
 USER=""
 RSAKEY=""
+HOSTNAME=""
+SSHPORT=""
+
+#修改主机名
+
+echo "$HOSTNAME" > /etc/hostname
 
 #创建Ubuntu账户
 
@@ -18,7 +24,7 @@ echo "$RSAKEY" >> /home/$USER/.ssh/authorized_keys
 #修改ssh配置文件
 
 sed -i "5d" /etc/ssh/sshd_config
-sed -i "4a\Port 24180" /etc/ssh/sshd_config
+sed -i "4a\Port $SSHPORT" /etc/ssh/sshd_config
 
 sed -i "29d" /etc/ssh/sshd_config
 sed -i "28a\RSAAuthentication yes" /etc/ssh/sshd_config

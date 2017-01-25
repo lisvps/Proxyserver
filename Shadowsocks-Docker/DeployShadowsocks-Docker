@@ -1,12 +1,21 @@
 #!/bin/bash
 
-#设置变量
+#设置用户名和主机变量，设置SSH端口
+
+USER=""
+RSAKEY=""
+HOSTNAME=""
+SSHPORT=""
+
+#设置Shadowsocks配置参数
 
 PASSWORD=""
 PORT=""
 DOCKERNAME=""
-USER=""
-RSAKEY=""
+
+#修改主机名
+
+echo "$HOSTNAME" > /etc/hostname
 
 #创建Ubuntu账户
 
@@ -21,7 +30,7 @@ echo "$RSAKEY" >> /home/$USER/.ssh/authorized_keys
 #修改ssh配置文件
 
 sed -i "5d" /etc/ssh/sshd_config
-sed -i "4a\Port 24180" /etc/ssh/sshd_config
+sed -i "4a\Port $SSHPORT" /etc/ssh/sshd_config
 
 sed -i "29d" /etc/ssh/sshd_config
 sed -i "28a\RSAAuthentication yes" /etc/ssh/sshd_config
@@ -51,5 +60,5 @@ apt-get install docker.io -y
 apt-get install qrencode -y
 sudo gpasswd -a $USER docker
 service docker start
-docker run --name $DOCKERNAME --restart always -d -p $PORT:443 lishuanglong/alpine-web -p 443 -k $PASSWORD
+docker run --name $DOCKERNAME --restart always -d -p $PORT:$PORT lishuanglong/alpine-web -p $PORT -k $PASSWORD
 su $USER 
