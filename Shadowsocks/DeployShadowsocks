@@ -1,5 +1,46 @@
 #!/bin/bash
 
+#设置变量
+
+$USER=""
+$RSAKEY=""
+
+#创建Ubuntu账户
+
+adduser $USER
+
+#开始导入SSH-key
+
+mkdir /home/$USER/.ssh/
+
+echo "$RSAKEY" >> /home/$USER/.ssh/authorized_keys
+
+#修改ssh配置文件
+
+sed -i "5d" /etc/ssh/sshd_config
+sed -i "4a\Port 24180" /etc/ssh/sshd_config
+
+sed -i "29d" /etc/ssh/sshd_config
+sed -i "28a\RSAAuthentication yes" /etc/ssh/sshd_config
+
+sed -i "30d" /etc/ssh/sshd_config
+sed -i "29a\PubkeyAuthentication yes" /etc/ssh/sshd_config
+
+
+sed -i "86d" /etc/ssh/sshd_config
+sed -i "85a\PermitRootLogin no" /etc/ssh/sshd_config
+sed -i "88d" /etc/ssh/sshd_config
+sed -i "87a\PasswordAuthentication no" /etc/ssh/sshd_config
+
+service ssh restart
+
+#添加ubuntu账户root权限
+
+chmod u+w /etc/sudoers
+rootuser="$USER  ALL=(ALL:ALL) ALL"
+sed -i "20a\ $rootuser" /etc/sudoers
+chmod u-w /etc/sudoers
+
 #配置项
 
 AddUser_shadowsocks() {
