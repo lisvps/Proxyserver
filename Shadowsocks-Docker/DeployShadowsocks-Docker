@@ -2,11 +2,11 @@
 
 #设置变量
 
-$PASSWORD=""
-$PORT=""
-$DOCKERNAME=""
-$USER=""
-$RSAKEY=""
+PASSWORD=""
+PORT=""
+DOCKERNAME=""
+USER=""
+RSAKEY=""
 
 #创建Ubuntu账户
 
